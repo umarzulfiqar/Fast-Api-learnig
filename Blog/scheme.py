@@ -11,6 +11,10 @@ class Config:
     orm_mode=True
 
 class user(BaseModel):
-    name: 'str'
-    email:'str'
-    password:'str'
+    name: str
+    email:str
+    password:str
+
+class show_user(BaseModel):
+    name:str
+    email:str

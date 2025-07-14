@@ -18,7 +18,7 @@ def get_db():
 
 
 #adding user
-@app.post('/user')
+@app.post('/user',response_model=scheme.show_user,tags=['User'])
 def add_user(request:scheme.user,db:Session=Depends(get_db)):
     new_user=models.user_data(name=request.name,email=request.email,password=hashing.Hash.bcrypt(request.password))
     db.add(new_user)
@@ -26,8 +26,17 @@ def add_user(request:scheme.user,db:Session=Depends(get_db)):
     db.refresh(new_user)
     return new_user
 
+#get user from db
+@app.get('/user/{id}',response_model=scheme.show_user,tags=['User'])
+def user_data_show(id,db:Session=Depends(get_db)):
+    user=db.query(models.user_data).filter(models.user_data.id==id).first()
+    if not user:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'No user found with id {id}')
+    return user
+
+
 #add data 
-@app.post('/blog',status_code=status.HTTP_201_CREATED)
+@app.post('/blog',status_code=status.HTTP_201_CREATED,tags=['Blogs'])
 def C(request:scheme.Blog,db:Session=Depends(get_db)):
     new_blog=models.blog_data(title=request.title,body=request.body)
     db.add(new_blog)
@@ -36,12 +45,12 @@ def C(request:scheme.Blog,db:Session=Depends(get_db)):
     return new_blog
 
 #read data
-@app.get('/blog',response_model=list[scheme.show_blog])
+@app.get('/blog',response_model=list[scheme.show_blog],tags=['Blogs'])
 def R(db:Session=Depends(get_db)):
     blogs=db.query(models.blog_data).all()
     return blogs
 
-@app.get('/blog/{id}',response_model=scheme.show_blog)
+@app.get('/blog/{id}',response_model=scheme.show_blog,tags=['Blogs'])
 def R_with_id(response:Response,id,db:Session=Depends(get_db)):
     blogs=db.query(models.blog_data).filter(models.blog_data.id==id).first()
     if not blogs:
@@ -51,7 +60,7 @@ def R_with_id(response:Response,id,db:Session=Depends(get_db)):
     return blogs
 
 #updata data
-@app.put('/blog{id}',status_code=status.HTTP_202_ACCEPTED)
+@app.put('/blog{id}',status_code=status.HTTP_202_ACCEPTED,tags=['Blogs'])
 def U(id,request:scheme.Blog,db:Session=Depends(get_db)):
     blog=db.query(models.blog_data).filter(models.blog_data.id==id)
     if not blog.first():
@@ -61,7 +70,7 @@ def U(id,request:scheme.Blog,db:Session=Depends(get_db)):
     return "UPDATED"
 
 #delete data
-@app.delete('/blog{id}',status_code=status.HTTP_204_NO_CONTENT)
+@app.delete('/blog{id}',status_code=status.HTTP_204_NO_CONTENT,tags=['Blogs'])
 def D(id,db:Session=Depends(get_db)):
     blog=db.query(models.blog_data).filter(models.blog_data.id==id)
     if  not blog.first():
