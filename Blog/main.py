@@ -40,13 +40,19 @@ def R_with_id(response:Response,id,db:Session=Depends(get_db)):
 #updata data
 @app.put('/blog{id}',status_code=status.HTTP_202_ACCEPTED)
 def U(id,request:scheme.Blog,db:Session=Depends(get_db)):
-    db.query(models.Blog).filter(models.Blog.id==id).update(request.model_dump(), synchronize_session=False)
+    blog=db.query(models.Blog).filter(models.Blog.id==id)
+    if not blog.first():
+        raise  HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Blog not found with id {id}")
+    blog.update(request.model_dump(), synchronize_session=False)
     db.commit()
     return "UPDATED"
 
 #delete data
 @app.delete('/blog{id}',status_code=status.HTTP_204_NO_CONTENT)
 def D(id,db:Session=Depends(get_db)):
-    blogs=db.query(models.Blog).filter(models.Blog.id==id).delete(synchronize_session=False)
+    blog=db.query(models.Blog).filter(models.Blog.id==id)
+    if  not blog.first():
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f"Blog not found with id {id}")
+    blog.delete(synchronize_session=False)
     db.commit()
-    return blogs
+    return blog
