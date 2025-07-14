@@ -1,7 +1,8 @@
 from fastapi import FastAPI,Depends,status,Response,HTTPException
-from . import scheme,models
+from . import scheme,models,hashing
 from .database import engine,SessionLocal
 from sqlalchemy.orm import Session
+
 
 models.Base.metadata.create_all(bind=engine)
 
@@ -14,10 +15,12 @@ def get_db():
     finally:
         db.close
 
+
+
 #adding user
 @app.post('/user')
 def add_user(request:scheme.user,db:Session=Depends(get_db)):
-    new_user=models.user_data(name=request.name,email=request.email,password=request.password)
+    new_user=models.user_data(name=request.name,email=request.email,password=hashing.Hash.bcrypt(request.password))
     db.add(new_user)
     db.commit()
     db.refresh(new_user)
