@@ -1,4 +1,4 @@
-from fastapi import FastAPI,Depends,status
+from fastapi import FastAPI,Depends,status,Response,HTTPException
 from . import scheme,models
 from .database import engine,SessionLocal
 from sqlalchemy.orm import Session
@@ -20,3 +20,17 @@ def C(request:scheme.Blog,db:Session=Depends(get_db)):
     db.commit()
     db.refresh(new_blog)
     return new_blog
+
+@app.get('/blog')
+def R(db:Session=Depends(get_db)):
+    blogs=db.query(models.Blog).all()
+    return blogs
+
+@app.get('/blog/{id}')
+def R_with_id(response:Response,id,db:Session=Depends(get_db)):
+    blogs=db.query(models.Blog).filter(models.Blog.id==id).first()
+    if not blogs:
+        raise HTTPException(status_code=status.HTTP_404_NOT_FOUND,detail=f'Response with id {id} not found')
+    #     response.status_code=status.HTTP_404_NOT_FOUND
+    #     return {'detail':f'Response with id {id} not found'}
+    return blogs
