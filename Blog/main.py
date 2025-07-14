@@ -13,6 +13,7 @@ def get_db():
     finally:
         db.close
 
+#add data 
 @app.post('/blog',status_code=status.HTTP_201_CREATED)
 def C(request:scheme.Blog,db:Session=Depends(get_db)):
     new_blog=models.Blog(title=request.title,body=request.body)
@@ -21,6 +22,7 @@ def C(request:scheme.Blog,db:Session=Depends(get_db)):
     db.refresh(new_blog)
     return new_blog
 
+#read data
 @app.get('/blog')
 def R(db:Session=Depends(get_db)):
     blogs=db.query(models.Blog).all()
@@ -35,6 +37,14 @@ def R_with_id(response:Response,id,db:Session=Depends(get_db)):
     #     return {'detail':f'Response with id {id} not found'}
     return blogs
 
+#updata data
+@app.put('/blog{id}',status_code=status.HTTP_202_ACCEPTED)
+def U(id,request:scheme.Blog,db:Session=Depends(get_db)):
+    db.query(models.Blog).filter(models.Blog.id==id).update(request.model_dump(), synchronize_session=False)
+    db.commit()
+    return "UPDATED"
+
+#delete data
 @app.delete('/blog{id}',status_code=status.HTTP_204_NO_CONTENT)
 def D(id,db:Session=Depends(get_db)):
     blogs=db.query(models.Blog).filter(models.Blog.id==id).delete(synchronize_session=False)
