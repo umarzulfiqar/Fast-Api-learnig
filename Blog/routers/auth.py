@@ -2,6 +2,7 @@ from fastapi import APIRouter,Depends,HTTPException,status
 from .. import scheme,database,models
 from sqlalchemy.orm import Session
 from ..hashing import Hash
+from . import JWT_token
 
 router=APIRouter(
     tags=(['Authentication'])
@@ -15,5 +16,6 @@ def login(request:scheme.Login,db:Session=Depends(database.get_db)):
         raise HTTPException(status.HTTP_404_NOT_FOUND,detail="Invalid Email")
     if not Hash.verifty(user.password,request.password):
         raise HTTPException(status.HTTP_404_NOT_FOUND,detail="Incorrect Password")
-
-    return user
+    #Genrate JWT Token
+    access_token =JWT_token.create_access_token(data={"sub": user.email})
+    return {"access_token":access_token,"token_type":"bearer"}
