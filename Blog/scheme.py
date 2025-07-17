@@ -10,16 +10,16 @@ class user(BaseModel):
     email:str
     password:str
 
-
 class show_user(BaseModel):
     name:str
     email:str
     blogs:List[Blog]=[]
-
-
 
 class show_blog(BaseModel):
     title:str #which i want to show only to the user
     body:str
     author:show_user
     
+class Login(BaseModel):
+    user_name: str
+    password: str
