@@ -1,9 +1,9 @@
-from fastapi import HTTPException,status
+from fastapi import HTTPException,status,Depends
 from sqlalchemy.orm import Session
 from .. import models,scheme
 
-def create_blog(request:scheme.Blog,db:Session):
-    new_blog=models.blog_data(title=request.title,body=request.body,user_id=1)
+def create_blog(request:scheme.Blog,db:Session):  #set user_id as user id of current user's id
+    new_blog=models.blog_data(title=request.title,body=request.body)
     db.add(new_blog)
     db.commit()
     db.refresh(new_blog)
