@@ -20,13 +20,13 @@ class show_blog(BaseModel):
     body:str
     author:show_user
 #FOr Login User    
-class Login(BaseModel):
+class login(BaseModel):
     user_name: str
     password: str
 #For Tokens
-class Token(BaseModel):
+class token(BaseModel):
     access_token: str
     token_type: str
 
-class TokenData(BaseModel): 
+class token_data(BaseModel): 
     email: str | None = None
