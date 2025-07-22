@@ -15,10 +15,15 @@ class show_user(BaseModel):
     email:str
     blogs:List[Blog]=[]
 
+class show_just_user(BaseModel):
+    name: str
+    email: str
+
 class show_blog(BaseModel):
     title:str #which i want to show only to the user
     body:str
-    author:show_user
+    author: show_just_user
+    
 #FOr Login User    
 class login(BaseModel):
     user_name: str
@@ -30,3 +35,7 @@ class token(BaseModel):
 
 class token_data(BaseModel): 
     email: str | None = None
+
+#For Comments
+class comment(BaseModel):
+    content :str
