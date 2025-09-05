@@ -1,6 +1,6 @@
 from datetime import datetime, timedelta, timezone
 from jose import jwt,JWTError
-from ..schemas import scheme
+from schemas import scheme
 from .config import SECRET_KEY
 
 ALGORITHM = "HS256"

@@ -1,9 +1,9 @@
 from fastapi import APIRouter,Depends,HTTPException,status
-from ..models import models
-from ..core import JWT_token, database
-from ..schemas import scheme
+from models import models
+from core import JWT_token, database
+from schemas import scheme
 from sqlalchemy.orm import Session
-from ..core.hashing import Hash
+from core.hashing import Hash
 
 
 router=APIRouter(

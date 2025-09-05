@@ -1,10 +1,10 @@
 from fastapi import APIRouter,status,Depends,Response,HTTPException
 from sqlalchemy.orm import Session
-from ..schemas import scheme
-from ..models import models
-from ..core import database
-from ..api import oauth2
-from ..core import hashing
+from schemas import scheme
+from models import models
+from core import database
+from api import oauth2
+from core import hashing
 from uuid import UUID
 
 
