@@ -1,8 +1,9 @@
 fastapi
 fastapi[standard]
-fastapi[all] uvicorn
+uvicorn
 pydantic
 sqlalchemy
 psycopg2
 python-jose
 passlib
+alembic

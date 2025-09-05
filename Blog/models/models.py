@@ -1,8 +1,9 @@
 import uuid
 from sqlalchemy.dialects.postgresql import UUID
 from sqlalchemy import Column, Integer, String ,ForeignKey,Text
-from core.database import Base
-from sqlalchemy.orm import relationship
+from sqlalchemy.orm import relationship,declarative_base
+
+Base = declarative_base()
 
 class blog_data(Base):
     __tablename__='blog_user'
